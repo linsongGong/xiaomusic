@@ -479,10 +479,11 @@ class XiaoMusic:
         self.log.info(f"get_music_url local music. name:{name}, filename:{filename}")
 
         encoded_name = urllib.parse.quote(filename)
-        return try_add_access_control_param(
-            self.config,
-            f"{self.hostname}:{self.public_port}/music/{encoded_name}",
-        )
+        if re.search(r":\d+$", self.hostname):
+            url = f"{self.hostname}/music/{encoded_name}"
+        else:
+            url = f"{self.hostname}:{self.public_port}/music/{encoded_name}"
+        return try_add_access_control_param(self.config, url)
 
     # 给前端调用
     def refresh_music_tag(self):
